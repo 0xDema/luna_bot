@@ -54,7 +54,14 @@ pub async unsafe fn in_game(msg: Message, arguments: &str) -> i64 {
 
     // Checking if the message contains mentions.
     if !msg.mentions.is_empty() {
-        mentioned_id = msg.mentions.first().unwrap().id.to_string().parse::<i64>().unwrap();
+        mentioned_id = msg
+            .mentions
+            .first()
+            .unwrap()
+            .id
+            .to_string()
+            .parse::<i64>()
+            .unwrap();
     }
     if arguments.is_empty() {
         response = 0;
@@ -71,8 +78,15 @@ pub async unsafe fn in_game(msg: Message, arguments: &str) -> i64 {
             while i < commands::GAME_DATA.len() {
                 let test1 = *commands::GAME_DATA.first().unwrap().first().unwrap();
                 let test2 = *commands::GAME_DATA.first().unwrap().get(1).unwrap();
-                println!("{}", test1.to_string() + " " + &test2.to_string().as_mut_str());
-                if test1 == author_id || test1 == mentioned_id || test2 == author_id || test2 == mentioned_id {
+                println!(
+                    "{}",
+                    test1.to_string() + " " + &test2.to_string().as_mut_str()
+                );
+                if test1 == author_id
+                    || test1 == mentioned_id
+                    || test2 == author_id
+                    || test2 == mentioned_id
+                {
                     found_in_game = true;
                 }
                 i += 1;
@@ -90,22 +104,61 @@ pub async unsafe fn in_game(msg: Message, arguments: &str) -> i64 {
 }
 
 // Asynchronous function to add a new game.
-pub async unsafe fn add_game(ctx: Context, msg: Message, energy: i64, turn: i64, board: i64, board2: i64, counter: i64, color: i64, color2: i64) {
+pub async unsafe fn add_game(
+    ctx: Context,
+    msg: Message,
+    energy: i64,
+    turn: i64,
+    board: i64,
+    board2: i64,
+    counter: i64,
+    color: i64,
+    color2: i64,
+) {
     let player_one = author(msg.clone());
     let mut player_two = 0;
     // Checking if the message contains mentions for a second player.
     if !msg.mentions.is_empty() {
-        player_two = msg.mentions.first().unwrap().id.to_string().parse::<i64>().unwrap();
+        player_two = msg
+            .mentions
+            .first()
+            .unwrap()
+            .id
+            .to_string()
+            .parse::<i64>()
+            .unwrap();
     }
     // Creating a new game and updating game count and bot's activity.
-    make_game(ctx.clone(), player_one, player_two, energy, turn, board, board2, counter, color, color2).await;
+    make_game(
+        ctx.clone(),
+        player_one,
+        player_two,
+        energy,
+        turn,
+        board,
+        board2,
+        counter,
+        color,
+        color2,
+    )
+    .await;
 
     let game = find_game(msg.clone()).await;
     let player_two = read_game(game, 1).await;
     let player_one = to_tag(player_one as u64).await;
     let player_two = to_tag(player_two as u64).await;
-    let response = responses::GAME_START.replace("PLAYER_ONE", player_one.as_str()).replace("PLAYER_TWO", player_two.as_str());
-    send_game(ctx.clone(), msg.clone(), game, table_id(msg).await as i32, response.as_str(), "Game Start").await;
+    let response = responses::GAME_START
+        .replace("PLAYER_ONE", player_one.as_str())
+        .replace("PLAYER_TWO", player_two.as_str());
+    send_game(
+        ctx.clone(),
+        msg.clone(),
+        game,
+        table_id(msg).await as i32,
+        response.as_str(),
+        "Game Start",
+    )
+    .await;
     commands::GAME_COUNT += 1;
     change_activity(ctx).await;
 }
@@ -186,43 +239,88 @@ pub async unsafe fn change_value(ctx: Context, msg: Message, location: i64, valu
     }
     // Ending the current game and creating a new game with updated values.
     end_game(table).await;
-    make_game(ctx, player_one, player_two, energy, turn, board, board2, counter, color, color2).await;
+    make_game(
+        ctx, player_one, player_two, energy, turn, board, board2, counter, color, color2,
+    )
+    .await;
 }
 
 // Asynchronous function to create a new game and add it to the game data.
-pub async unsafe fn make_game(ctx: Context, player_one: i64, player_two: i64, energy: i64, turn: i64, board: i64, board2: i64, counter: i64, color: i64, color2: i64) {
-    commands::GAME_DATA.push([player_one, player_two, energy, turn, board, board2, counter, color, color2]);
+pub async unsafe fn make_game(
+    ctx: Context,
+    player_one: i64,
+    player_two: i64,
+    energy: i64,
+    turn: i64,
+    board: i64,
+    board2: i64,
+    counter: i64,
+    color: i64,
+    color2: i64,
+) {
+    commands::GAME_DATA.push([
+        player_one, player_two, energy, turn, board, board2, counter, color, color2,
+    ]);
     // Updating the bot's activity with the new game count.
     change_activity(ctx).await;
 }
 
 // Asynchronous function to send the game state as an image.
-pub async unsafe fn send_game(ctx: Context, msg: Message, game: [i64; 9], table: i32, desc: &str, title: &str) {
+pub async unsafe fn send_game(
+    ctx: Context,
+    msg: Message,
+    game: [i64; 9],
+    table: i32,
+    desc: &str,
+    title: &str,
+) {
     // Sending the game state as an image using the memory_gauge module.
-    send_embed_image(ctx, msg, title, desc, memory_gauge::create_gauge(game, table).await.as_str()).await;
+    send_embed_image(
+        ctx,
+        msg,
+        title,
+        desc,
+        memory_gauge::create_gauge(game, table).await.as_str(),
+    )
+    .await;
 }
 
 pub async fn send_help(ctx: Context, msg: Message) {
     // Create a mutable embed builder
     let mut embed = CreateEmbed::default();
     // Set embed properties
-    embed = embed.author(|a| a.name("Lunabot").url(responses::INVITE_LINK).icon_url("https://dema.pink/lunabot.png")).to_owned();
+    embed = embed
+        .author(|a| {
+            a.name("Lunabot")
+                .url(responses::INVITE_LINK)
+                .icon_url("https://dema.pink/lunabot.png")
+        })
+        .to_owned();
     embed = embed.title("Lunamon Info").to_owned();
     embed = embed.description(responses::HELP_MESSAGE).to_owned();
-    embed = embed.footer(|f| f.text("Created by 0xdema").icon_url("https://dema.pink/0xdema.png")).to_owned();
+    embed = embed
+        .footer(|f| {
+            f.text("Created by 0xdema")
+                .icon_url("https://dema.pink/0xdema.png")
+        })
+        .to_owned();
     embed = embed.color(0x5500aa).to_owned();
 
     // Clone the embed contents before using it in send_message
     let cloned_embed = embed.clone();
 
     // Send the embed
-    if let Err(why) = msg.channel_id.send_message(&ctx.http, |m| {
-        m.embed(|e| {
-            // Attach the cloned embed
-            *e = cloned_embed;
-            e
+    if let Err(why) = msg
+        .channel_id
+        .send_message(&ctx.http, |m| {
+            m.embed(|e| {
+                // Attach the cloned embed
+                *e = cloned_embed;
+                e
+            })
         })
-    }).await {
+        .await
+    {
         println!("Error sending embed: {:?}", why);
     }
 }
@@ -238,13 +336,17 @@ pub async unsafe fn send_message(ctx: Context, msg: Message, desc: &str) {
     let cloned_embed = embed.clone();
 
     // Send the embed
-    if let Err(why) = msg.channel_id.send_message(&ctx.http, |m| {
-        m.embed(|e| {
-            // Attach the cloned embed
-            *e = cloned_embed;
-            e
+    if let Err(why) = msg
+        .channel_id
+        .send_message(&ctx.http, |m| {
+            m.embed(|e| {
+                // Attach the cloned embed
+                *e = cloned_embed;
+                e
+            })
         })
-    }).await {
+        .await
+    {
         println!("Error sending embed: {:?}", why);
     }
 }
@@ -263,14 +365,21 @@ pub async fn send_embed_image(ctx: Context, msg: Message, title: &str, desc: &st
     let mut file = File::open(path).await.unwrap();
 
     // Send the embed
-    if let Err(why) = msg.channel_id.send_message(&ctx.http, |m| {
-        m.embed(|e| {
-            // Attach the cloned embed
-            *e = cloned_embed;
-            e
-        });
-        m.add_file(AttachmentType::File { file: &file, filename: "image.jpg".to_owned() })
-    }).await {
+    if let Err(why) = msg
+        .channel_id
+        .send_message(&ctx.http, |m| {
+            m.embed(|e| {
+                // Attach the cloned embed
+                *e = cloned_embed;
+                e
+            });
+            m.add_file(AttachmentType::File {
+                file: &file,
+                filename: "image.jpg".to_owned(),
+            })
+        })
+        .await
+    {
         println!("Error sending embed: {:?}", why);
     }
 

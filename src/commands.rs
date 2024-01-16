@@ -1,14 +1,11 @@
 // Import necessary modules from the standard library and Serenity crate.
 use std::process::exit;
 
-use serenity::{
-    model::channel::Message,
-    prelude::*,
-};
+use serenity::{model::channel::Message, prelude::*};
 
 // Import local modules.
-use crate::{core_functions, memory_gauge, responses};
 use crate::core_functions::send_help;
+use crate::{core_functions, memory_gauge, responses};
 
 // Static mutable variables to store game data and game count.
 pub static mut GAME_DATA: Vec<[i64; 9]> = Vec::new();
@@ -62,12 +59,56 @@ async unsafe fn start(ctx: Context, msg: Message, arguments: &str) {
     if table == 18446744073709551615 {
         let game_info = core_functions::in_game(msg.clone(), arguments).await;
         match game_info {
-            0 => core_functions::send_message(ctx.clone(), msg.clone(), responses::NO_PLAYER_ERROR_MESSAGE).await,
-            1 => core_functions::send_message(ctx.clone(), msg.clone(), responses::SELF_ERROR_MESSAGE).await,
-            2 => core_functions::send_message(ctx.clone(), msg.clone(), responses::BOT_ERROR_MESSAGE).await,
-            3 => core_functions::send_message(ctx.clone(), msg.clone(), responses::OTHER_GAME_ERROR_MESSAGE).await,
-            4 => core_functions::add_game(ctx.clone(), msg.clone(), i64::MAX, 0, 16, 17, 4, 16711680, 255).await,
-            5 => core_functions::send_message(ctx.clone(), msg.clone(), responses::VALID_PLAYER_ERROR_MESSAGE).await,
+            0 => {
+                core_functions::send_message(
+                    ctx.clone(),
+                    msg.clone(),
+                    responses::NO_PLAYER_ERROR_MESSAGE,
+                )
+                .await
+            }
+            1 => {
+                core_functions::send_message(
+                    ctx.clone(),
+                    msg.clone(),
+                    responses::SELF_ERROR_MESSAGE,
+                )
+                .await
+            }
+            2 => {
+                core_functions::send_message(ctx.clone(), msg.clone(), responses::BOT_ERROR_MESSAGE)
+                    .await
+            }
+            3 => {
+                core_functions::send_message(
+                    ctx.clone(),
+                    msg.clone(),
+                    responses::OTHER_GAME_ERROR_MESSAGE,
+                )
+                .await
+            }
+            4 => {
+                core_functions::add_game(
+                    ctx.clone(),
+                    msg.clone(),
+                    i64::MAX,
+                    0,
+                    16,
+                    17,
+                    4,
+                    16711680,
+                    255,
+                )
+                .await
+            }
+            5 => {
+                core_functions::send_message(
+                    ctx.clone(),
+                    msg.clone(),
+                    responses::VALID_PLAYER_ERROR_MESSAGE,
+                )
+                .await
+            }
             _ => {}
         }
     } else {
@@ -82,14 +123,15 @@ async unsafe fn end(ctx: Context, msg: Message) {
 
     println!("{}", table);
     if table != 18446744073709551615 {
-
         // Retrieve game information
         let game = *GAME_DATA.get(table).unwrap();
         let player_one = core_functions::read_game(game, 0).await;
         let player_two = core_functions::read_game(game, 1).await;
         let player_one = core_functions::to_tag(player_one as u64).await;
         let player_two = core_functions::to_tag(player_two as u64).await;
-        let response = responses::CLOSE_GAME.replace("PLAYER_ONE", player_one.as_str()).replace("PLAYER_TWO", player_two.as_str());
+        let response = responses::CLOSE_GAME
+            .replace("PLAYER_ONE", player_one.as_str())
+            .replace("PLAYER_TWO", player_two.as_str());
         core_functions::send_message(ctx.clone(), msg, response.as_str()).await;
         // End the game and update game count and bot activity.
         core_functions::end_game(table).await;
@@ -113,7 +155,9 @@ async unsafe fn reset(ctx: Context, msg: Message) {
         let player_two = core_functions::read_game(game, 1).await;
         let player_one = core_functions::to_tag(player_one as u64).await;
         let player_two = core_functions::to_tag(player_two as u64).await;
-        let out = responses::RESET_GAME.replace("PLAYER_ONE", player_one.as_str()).replace("PLAYER_TWO", player_two.as_str());
+        let out = responses::RESET_GAME
+            .replace("PLAYER_ONE", player_one.as_str())
+            .replace("PLAYER_TWO", player_two.as_str());
 
         //core_functions::send_message(ctx.clone(), msg.clone(), out.as_str()).await;
         core_functions::send_game(ctx, msg, game, table as i32, out.as_str(), "Game Reset").await;
@@ -190,7 +234,8 @@ async unsafe fn status(ctx: Context, msg: Message) {
         output = output + " (" + &player_one + " v " + &player_two + ")";
         // Send the status message and the game memory gauge.
         //core_functions::send_message(ctx.clone(), msg.clone(), output.as_str()).await;
-        core_functions::send_game(ctx, msg, game, table as i32, output.as_str(), "Game Status").await;
+        core_functions::send_game(ctx, msg, game, table as i32, output.as_str(), "Game Status")
+            .await;
     } else {
         core_functions::send_message(ctx.clone(), msg, responses::NOT_IN_GAME).await;
     }
@@ -258,7 +303,12 @@ async unsafe fn minus(ctx: Context, msg: Message) {
                 // Handle energy change for player_one
                 // Check if energy after change is within valid range
                 if energy + cost > 10 {
-                    core_functions::send_message(ctx.clone(), msg.clone(), responses::NOT_ENOUGH_ENERGY).await;
+                    core_functions::send_message(
+                        ctx.clone(),
+                        msg.clone(),
+                        responses::NOT_ENOUGH_ENERGY,
+                    )
+                    .await;
                 } else {
                     energy += cost;
                     core_functions::change_value(ctx.clone(), msg.clone(), 3, 1).await;
@@ -270,7 +320,12 @@ async unsafe fn minus(ctx: Context, msg: Message) {
                 // Handle energy change for player_two
                 // Check if energy after change is within valid range
                 if energy - cost < -10 {
-                    core_functions::send_message(ctx.clone(), msg.clone(), responses::NOT_ENOUGH_ENERGY).await;
+                    core_functions::send_message(
+                        ctx.clone(),
+                        msg.clone(),
+                        responses::NOT_ENOUGH_ENERGY,
+                    )
+                    .await;
                 } else {
                     energy -= cost;
                     core_functions::change_value(ctx.clone(), msg.clone(), 3, 2).await;
@@ -283,7 +338,12 @@ async unsafe fn minus(ctx: Context, msg: Message) {
             // Handle energy change for player_one in turn 1
             if author == player_one {
                 if energy + cost > 10 {
-                    core_functions::send_message(ctx.clone(), msg.clone(), responses::NOT_ENOUGH_ENERGY).await;
+                    core_functions::send_message(
+                        ctx.clone(),
+                        msg.clone(),
+                        responses::NOT_ENOUGH_ENERGY,
+                    )
+                    .await;
                 } else {
                     energy += cost;
                     if energy > 0 {
@@ -292,17 +352,24 @@ async unsafe fn minus(ctx: Context, msg: Message) {
                 }
             } else if author == player_two {
                 // Notify player_two to wait for their turn
-                core_functions::send_message(ctx.clone(), msg.clone(), responses::WAIT_FOR_TURN).await;
+                core_functions::send_message(ctx.clone(), msg.clone(), responses::WAIT_FOR_TURN)
+                    .await;
             }
         } else if turn == 2 {
             // Handle energy change for player_two in turn 2
             if author == player_one {
                 // Notify player_one to wait for their turn
-                core_functions::send_message(ctx.clone(), msg.clone(), responses::WAIT_FOR_TURN).await;
+                core_functions::send_message(ctx.clone(), msg.clone(), responses::WAIT_FOR_TURN)
+                    .await;
             } else if author == player_two {
                 // Check if energy after change is within valid range
                 if energy - cost < -10 {
-                    core_functions::send_message(ctx.clone(), msg.clone(), responses::NOT_ENOUGH_ENERGY).await;
+                    core_functions::send_message(
+                        ctx.clone(),
+                        msg.clone(),
+                        responses::NOT_ENOUGH_ENERGY,
+                    )
+                    .await;
                 } else {
                     energy -= cost;
                     if energy < 0 {
@@ -368,13 +435,15 @@ async unsafe fn plus(ctx: Context, msg: Message) {
                 }
             } else if author == player_two {
                 // Notify player_two to wait for their turn
-                core_functions::send_message(ctx.clone(), msg.clone(), responses::WAIT_FOR_TURN).await;
+                core_functions::send_message(ctx.clone(), msg.clone(), responses::WAIT_FOR_TURN)
+                    .await;
             }
         } else if turn == 2 {
             // Handle energy change for player_two in turn 2
             if author == player_one {
                 // Notify player_one to wait for their turn
-                core_functions::send_message(ctx.clone(), msg.clone(), responses::WAIT_FOR_TURN).await;
+                core_functions::send_message(ctx.clone(), msg.clone(), responses::WAIT_FOR_TURN)
+                    .await;
             } else if author == player_two {
                 // Check if energy after change is within valid range
                 if energy + cost > 10 {
@@ -425,7 +494,15 @@ async unsafe fn change_board(ctx: Context, msg: Message, arguments: &str) {
                         core_functions::change_value(ctx.clone(), msg.clone(), 5, arguments).await;
                     }
                     let game = core_functions::find_game(msg.clone()).await;
-                    core_functions::send_game(ctx, msg, game, table as i32, "", "Memory Gauge Changed").await;
+                    core_functions::send_game(
+                        ctx,
+                        msg,
+                        game,
+                        table as i32,
+                        "",
+                        "Memory Gauge Changed",
+                    )
+                    .await;
                 }
             } else {
                 // Notify if the argument is not a number
@@ -518,7 +595,8 @@ async unsafe fn change_counter(ctx: Context, msg: Message, arguments: &str) {
 
                     // Get the updated game data and send the updated game state
                     let game = core_functions::find_game(msg.clone()).await;
-                    core_functions::send_game(ctx, msg, game, table as i32, "", "Counter Changed").await;
+                    core_functions::send_game(ctx, msg, game, table as i32, "", "Counter Changed")
+                        .await;
                 }
             } else {
                 core_functions::send_message(ctx, msg, responses::COUNTER_SELECT).await;

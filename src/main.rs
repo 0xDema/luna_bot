@@ -14,18 +14,21 @@ No way was found to improve selection of counter and memory gauge if being grabb
 // Importing the required modules from the standard library and Serenity crate.
 use std::env;
 
+use serenity::model::user::OnlineStatus;
 use serenity::{
     async_trait,
-    model::{channel::Message, gateway::{Activity, Ready}},
+    model::{
+        channel::Message,
+        gateway::{Activity, Ready},
+    },
     prelude::*,
 };
-use serenity::model::user::OnlineStatus;
 
 // Importing local modules.
 mod commands;
 mod core_functions;
-mod responses;
 mod memory_gauge;
+mod responses;
 
 struct Handler;
 
@@ -37,7 +40,9 @@ impl EventHandler for Handler {
         // Check if the author of the message is not a bot.
         if !msg.author.bot {
             // Call the command handling function from the commands module.
-            unsafe { commands::command(ctx, msg).await; }
+            unsafe {
+                commands::command(ctx, msg).await;
+            }
         }
     }
     // Asynchronous function to handle the bot being ready.

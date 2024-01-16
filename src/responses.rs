@@ -47,5 +47,6 @@ pub const CLOSE_GAME: &str = "Your game between PLAYER_ONE & PLAYER_TWO is now c
 pub const RESET_GAME: &str = "Your game between PLAYER_ONE and PLAYER_TWO has been reset.";
 pub const NOT_YOUR_TURN: &str = "It is PLAYER_TWO's turn.";
 pub const TURN_STATUS: &str = "It is the TURN_PLAYER's turn";
-pub const FULL_TURN_STATUS: &str = "Table: TABLE_ID ~ PLAYER_ONE vs PLAYER_TWO - TURN_PLAYER's turn. ~ TOTAL_ENERGY energy.\r\n";
+pub const FULL_TURN_STATUS: &str =
+    "Table: TABLE_ID ~ PLAYER_ONE vs PLAYER_TWO - TURN_PLAYER's turn. ~ TOTAL_ENERGY energy.\r\n";
 pub const INVITE_LINK: &str = "https://discord.com/oauth2/authorize?client_id=955931937581723668&scope=bot&permissions=277025639424";

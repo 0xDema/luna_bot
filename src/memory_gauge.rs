@@ -1,6 +1,6 @@
 // Importing required modules from the standard library and Serenity crate.
 
-use image::{DynamicImage, ImageBuffer, imageops, imageops::FilterType, Rgba};
+use image::{imageops, imageops::FilterType, DynamicImage, ImageBuffer, Rgba};
 use rusttype::{Font, Scale};
 
 use crate::core_functions;
@@ -8,7 +8,6 @@ use crate::core_functions;
 // Importing modules from the local crate.
 
 pub async fn create_gauge(game: [i64; 9], table: i32) -> String {
-
     // Declarations
     let player_one_name = core_functions::to_tag(*game.first().unwrap() as u64).await;
     let player_two_name = core_functions::to_tag(*game.get(1).unwrap() as u64).await;
@@ -26,9 +25,7 @@ pub async fn create_gauge(game: [i64; 9], table: i32) -> String {
     let gauge_one = image::load_from_memory(gauge_one).expect("File not found!");
     let gauge_two = image::load_from_memory(gauge_two).expect("File not found!");
     let counter = image::load_from_memory(counter).expect("File not found!");
-    let final_gauge = ImageBuffer::from_fn(1000, 350, |_x, _y| {
-        Rgba([255, 255, 255, 255])
-    });
+    let final_gauge = ImageBuffer::from_fn(1000, 350, |_x, _y| Rgba([255, 255, 255, 255]));
     let final_gauge = DynamicImage::ImageRgba8(final_gauge);
 
     //Resize images to be correct
@@ -40,10 +37,46 @@ pub async fn create_gauge(game: [i64; 9], table: i32) -> String {
     let mut gauge_two = gauge_two.flipv().fliph();
 
     //Draw Text and Outline
-    gauge_one = draw_text(player_one_name.clone(), Rgba([0, 0, 0, 100]), gauge_one.clone(), 292, 47, 61.0, 86.0).await;
-    gauge_one = draw_text(player_one_name, from_bit_field(color), gauge_one.clone(), 290, 50, 60.0, 80.0).await;
-    gauge_two = draw_text(player_two_name.clone(), Rgba([0, 0, 0, 100]), gauge_two.clone(), 52, 237, 61.0, 86.0).await;
-    gauge_two = draw_text(player_two_name, from_bit_field(color2), gauge_two.clone(), 50, 240, 60.0, 80.0).await;
+    gauge_one = draw_text(
+        player_one_name.clone(),
+        Rgba([0, 0, 0, 100]),
+        gauge_one.clone(),
+        292,
+        47,
+        61.0,
+        86.0,
+    )
+    .await;
+    gauge_one = draw_text(
+        player_one_name,
+        from_bit_field(color),
+        gauge_one.clone(),
+        290,
+        50,
+        60.0,
+        80.0,
+    )
+    .await;
+    gauge_two = draw_text(
+        player_two_name.clone(),
+        Rgba([0, 0, 0, 100]),
+        gauge_two.clone(),
+        52,
+        237,
+        61.0,
+        86.0,
+    )
+    .await;
+    gauge_two = draw_text(
+        player_two_name,
+        from_bit_field(color2),
+        gauge_two.clone(),
+        50,
+        240,
+        60.0,
+        80.0,
+    )
+    .await;
 
     // When game starts i64 is max (To allow either player to play), sets to 0 for image purposes
     let energy = if energy == i64::MAX { 0 } else { energy };
@@ -58,7 +91,10 @@ pub async fn create_gauge(game: [i64; 9], table: i32) -> String {
     let final_gauge = merge(final_gauge, &[gauge_two], 500, 0).await;
     let location = "./Table/".to_string() + table.to_string().as_str() + ".jpg";
     // Puts the counter on the board and saves file with table number
-    merge(final_gauge.clone(), &[counter], x, y).await.save(location.clone()).expect("TODO: panic message");
+    merge(final_gauge.clone(), &[counter], x, y)
+        .await
+        .save(location.clone())
+        .expect("TODO: panic message");
     println!("{}", location);
     location
 }
@@ -86,7 +122,7 @@ fn energy_position(energy: i64) -> (i64, i64) {
         8 => (716, 44),
         9 => (633, 44),
         10 => (547, 134),
-        _ => (463, 134)
+        _ => (463, 134),
     }
 }
 
@@ -99,7 +135,15 @@ async fn merge(mut base: DynamicImage, img: &[DynamicImage], x: i64, y: i64) -> 
 }
 
 // Draws the colored text on the memory gauge
-async fn draw_text(fact: String, color: Rgba<u8>, mut img: DynamicImage, mut x: i32, y: i32, text_width: f32, text_height: f32) -> DynamicImage {
+async fn draw_text(
+    fact: String,
+    color: Rgba<u8>,
+    mut img: DynamicImage,
+    mut x: i32,
+    y: i32,
+    text_width: f32,
+    text_height: f32,
+) -> DynamicImage {
     let font_bytes = include_bytes!("Templates/font.ttf");
     let font = Font::try_from_bytes(font_bytes).unwrap();
     let wrapped_fact = textwrap::wrap(fact.as_str(), 30);
@@ -109,7 +153,10 @@ async fn draw_text(fact: String, color: Rgba<u8>, mut img: DynamicImage, mut x: 
             color,
             x,
             y,
-            Scale { x: text_width, y: text_height },
+            Scale {
+                x: text_width,
+                y: text_height,
+            },
             &font,
             &line,
         );
@@ -167,7 +214,10 @@ pub fn to_bit_field(input: String) -> i64 {
 fn from_bit_field(input: i64) -> Rgba<u8> {
     let input = format!("{:24b}", input);
     let input: Vec<char> = input.chars().collect();
-    let chunks: Vec<String> = input.chunks(8).map(|chunk| chunk.iter().collect()).collect();
+    let chunks: Vec<String> = input
+        .chunks(8)
+        .map(|chunk| chunk.iter().collect())
+        .collect();
     let red: u8 = extract_color(chunks.clone(), 0) as u8;
     let blue: u8 = extract_color(chunks.clone(), 1) as u8;
     let green: u8 = extract_color(chunks, 2) as u8;
@@ -216,8 +266,9 @@ fn from_color(input: String) -> String {
         "gray" => "128,128,128",
         "white" => "255,255,255",
         "mine" => "255,153,204",
-        _ => { "255,0,128" }
-    }.to_string()
+        _ => "255,0,128",
+    }
+    .to_string()
 }
 
 // Converts the hexadecimal into RGB notation
@@ -254,7 +305,7 @@ fn to_decimal(input: String) -> u8 {
         "e" => 14,
         "f" => 15,
 
-        _ => { 0 }
+        _ => 0,
     }
 }
 
