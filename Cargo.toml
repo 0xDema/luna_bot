@@ -12,3 +12,4 @@ image = "0.24.7"
 rusttype = "0.9.3"
 imageproc = "0.23.0"
 textwrap = "0.16.0"
+ 
