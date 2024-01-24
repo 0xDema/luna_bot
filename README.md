@@ -70,8 +70,6 @@ The counters are (80px,80px), the memory gauges are (500px,350px). 2 examples of
 
 On the code side optimization, code cleanup, and bug fixes are the current priority however there are some features being considered for future updates.
 
-The updates I am considering making in the future are in main.rs header as a comment.
-
 ## Disclaimers
 
 We are currently using scans of some official memory gauges and the 2 that we made as examples are using some official art. We do not claim any kind of ownership over them, they are owned by Bandai and will be removed from this repository per request. Ultimately I am hoping to have only custom gauges with no official art.
