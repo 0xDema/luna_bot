@@ -1,15 +1,3 @@
-/*
-Below are some additional changes I may make in the future depending on bots total usage.
-
-Conf file to store player preferences for color/board/font? - NOT PLANNED
-Save time by creating the board when game starts or board is changed only, then just place the counter on turn changes. - NOT PLANNED
-Custom fonts? - NOT PLANNED
-Replace GAME_DATA with a more suitable datatype (Enum/Tuple) (Find way to make it safely without unsafe) - NOT PLANNED
-Focus on speed optimization - NOT PLANNED
-
-Sending image directly from memory is not yet possible due to serenity-rs having issues not being able to create the magic numbers on the fly which causes it to crash unless saved - CANCELLED
-No way was found to improve selection of counter and memory gauge if being grabbed from bytes. get_gauge_bytes and get_counter_bytes work in meantime however require update - CANCELLED
-*/
 
 // Importing the required modules from the standard library and Serenity crate.
 use std::env;
