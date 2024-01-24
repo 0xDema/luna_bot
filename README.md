@@ -72,6 +72,10 @@ On the code side optimization, code cleanup, and bug fixes are the current prior
 
 The updates I am considering making in the future are in main.rs header as a comment.
 
+## Disclaimers
+
+We are currently using scans of some official memory gauges and the 2 that we made as examples are using some official art. We do not claim any kind of ownership over them, they are owned by Bandai and will be removed from this repository per request. Ultimately I am hoping to have only custom gauges with no official art.
+
 ## License
 
 This project is licensed under the [MIT License](LICENSE).
