@@ -1,6 +1,6 @@
 # Lunabot - Digimon TCG Memory Gauge Discord Bot
 
-Lunabot is a Discord bot designed to enhance the Digimon Trading Card Game (TCG) experience by providing a customizable digital interactable memory gauge to assist with online and offline play.
+Lunabot is a Discord bot designed to enhance the Digimon Trading Card Game (TCG) experience by providing a customizable digital intractable memory gauge to assist with online and offline play.
 
 [Click here](https://discord.com/oauth2/authorize?client_id=955931937581723668&scope=bot&permissions=277025639424) to add to your server.
 
@@ -25,7 +25,7 @@ Lunabot is a Discord bot designed to enhance the Digimon Trading Card Game (TCG)
    
 3. Put your gauges in [Gauges](src/Templates/Gauges) named 1.jpg... Then add them in the function get_gauge_bytes() in [memory_gauge.rs](src/memory_gauge.rs). Then change number of counters in change_gauge() in [commands.rs](src/commands.rs) (Or stick with default 17)
 
-4. If you changed the number of gauges and counters you will also want to change the text in [Repsonses](src/responses.rs)
+4. If you changed the number of gauges and counters you will also want to change the text in [Responses](src/responses.rs)
 
 5. Clone the repository:
    ```bash
@@ -73,7 +73,7 @@ Lunabot is a Discord bot designed to enhance the Digimon Trading Card Game (TCG)
 
 If you'd like to contribute to Lunabot, feel free to open an issue or submit a pull request. All contributions are welcome!
 
-Currently we could really could be assisted by any artists interested in making more custom memory gauges, counters, and a profile picture for the bot.
+Currently, we could really could be assisted by any artists interested in making more custom memory gauges, counters, and a profile picture for the bot.
 
 The counters are (80px,80px), the memory gauges are (500px,350px). 2 examples of psd's with placement of memory gauge and template are in the main directory.
 
