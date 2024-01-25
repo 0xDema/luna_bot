@@ -19,13 +19,19 @@ Lunabot is a Discord bot designed to enhance the Digimon Trading Card Game (TCG)
 
 ### Installation
 
-1. Clone the repository:
+1. Put your font of choice in [Templates](src/Templates) named font.ttf
+   
+2. Put your counters in [Counters](src/Counters) named 1.png... Then add them in the function get_counter_bytes() in [memory_gauge.rs](src/memory_gauge.rs). Then change number of counters in change_counter() in [commands.rs](src/commands.rs) (Or stick with default 5)
+   
+3. Put your gauges in [Gauges](src/Gauges) named 1.jpg... Then add them in the function get_gauge_bytes() in [memory_gauge.rs](src/memory_gauge.rs). Then change number of counters in change_gauge() in [commands.rs](src/commands.rs) (Or stick with default 15)
+
+4. Clone the repository:
    ```bash
    git clone https://github.com/yourusername/lunabot.git
-2. Navigate to the project directory:
+5. Navigate to the project directory:
    ```bash
    git cargo build --release
-4. Add the bot secret token. (Replace TOKEN with your token)
+6. Add the bot secret token. (Replace TOKEN with your token)
    ```bash
    export LUNABOT_TOKEN=TOKEN
 
@@ -69,10 +75,6 @@ Currently we could really could be assisted by any artists interested in making 
 The counters are (80px,80px), the memory gauges are (500px,350px). 2 examples of psd's with placement of memory gauge and template are in the main directory.
 
 On the code side optimization, code cleanup, and bug fixes are the current priority however there are some features being considered for future updates.
-
-## Disclaimers
-
-We are currently using scans of some official memory gauges and the 2 that we made as examples are using some official art. We do not claim any kind of ownership over them, they are owned by Bandai and will be removed from this repository per request. Ultimately I am hoping to have only custom gauges with no official art.
 
 ## License
 
