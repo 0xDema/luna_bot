@@ -13,7 +13,7 @@ pub const COLOR_COMMAND: &str = "!color";
 pub const COUNTER_COMMAND: &str = "!counter";
 pub const QUIT_COMMAND: &str = "!quit";
 //Response Text
-pub const HELP_MESSAGE: &str = "**!start** @Player- Starts a new match.
+pub const HELP_MESSAGE: &str = "**!start** @Player - Starts a new match.
 **!end** - Ends the current game.
 **!reset** - Starts a new game with the same player.
 **!pass **- Passes turn resetting energy to 3.
