@@ -34,6 +34,7 @@ Lunabot is a Discord bot designed to enhance the Digimon Trading Card Game (TCG)
 6. Add the bot secret token. (Replace TOKEN with your token)
    ```bash
    export LUNABOT_TOKEN=TOKEN
+7. You will want to put a folder beside the executable called Table for temporary storage of gauge images.
 
 ## Commands
 
