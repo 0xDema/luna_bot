@@ -21,9 +21,9 @@ Lunabot is a Discord bot designed to enhance the Digimon Trading Card Game (TCG)
 
 1. Put your font of choice in [Templates](src/Templates) named font.ttf
    
-2. Put your counters in [Counters](src/Counters) named 1.png... Then add them in the function get_counter_bytes() in [memory_gauge.rs](src/memory_gauge.rs). Then change number of counters in change_counter() in [commands.rs](src/commands.rs) (Or stick with default 5)
+2. Put your counters in [Counters](src/Templates/Counters) named 1.png... Then add them in the function get_counter_bytes() in [memory_gauge.rs](src/memory_gauge.rs). Then change number of counters in change_counter() in [commands.rs](src/commands.rs) (Or stick with default 5)
    
-3. Put your gauges in [Gauges](src/Gauges) named 1.jpg... Then add them in the function get_gauge_bytes() in [memory_gauge.rs](src/memory_gauge.rs). Then change number of counters in change_gauge() in [commands.rs](src/commands.rs) (Or stick with default 17)
+3. Put your gauges in [Gauges](src/Templates/Gauges) named 1.jpg... Then add them in the function get_gauge_bytes() in [memory_gauge.rs](src/memory_gauge.rs). Then change number of counters in change_gauge() in [commands.rs](src/commands.rs) (Or stick with default 17)
 
 4. If you changed the number of gauges and counters you will also want to change the text in [Repsonses](src/responses.rs)
 
